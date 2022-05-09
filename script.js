@@ -76,7 +76,7 @@ function updateScore(victory, defeat) {
   }
 }
 
-function updateTextColor(victory, defeat) {
+function updateResultTextColor(victory, defeat) {
   verdictEl.classList.toggle("victory", victory);
   resultTextEl.classList.toggle("victory", victory);
   verdictEl.classList.toggle("defeat", defeat);
@@ -92,7 +92,7 @@ function showResults(playerHand, computerHand) {
   verdictEl.textContent = explanationList[explanationKey];
   resultTextEl.textContent = result;
   updateScore(victory, defeat);
-  updateTextColor(victory, defeat);
+  updateResultTextColor(victory, defeat);
 }
 
 function resetAll() {
