@@ -96,8 +96,8 @@ function showResults(playerHand, computerHand) {
 }
 
 function resetAll() {
-  playerSelectedBeforeEl.classList.remove("selected");
-  computerSelectedBeforeEl.classList.remove("selected");
+  updateSelectionStyle(playerElements, "none");
+  updateSelectionStyle(computerElements, "none");
   playerScoreEl.textContent = 0;
   computerScoreEl.textContent = 0;
   playerChoiceEl.textContent = "";
