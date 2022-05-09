@@ -1,3 +1,6 @@
+import { startConfetti, stopConfetti, removeConfetti } from "./confetti.js";
+
+
 const playerElements = {};
 
 const computerElements = {};
@@ -17,10 +20,6 @@ const verdictEl = document.getElementById("verdict");
 const resetIconEl = document.getElementById("resetIcon");
 
 const choiceList = ["Rock", "Paper", "Scissors", "Lizard", "Spock"];
-
-let playerSelectedBeforeEl = document.getElementById("playerRock");
-
-let computerSelectedBeforeEl = document.getElementById("computerRock");
 
 const choices = {
   rock: { name: "Rock", defeats: ["scissors", "lizard"] },
@@ -44,28 +43,34 @@ const explanationList = {
 };
 
 function computerSelects() {
-  choiceIndex = Math.floor(Math.random() * 5);
-  computerChoiceEl.textContent = ` --- ${choiceList[choiceIndex]}`;
-  const computerSelect = choiceList[choiceIndex].toLocaleLowerCase();
-  computerSelectedBeforeEl.classList.remove("selected");
-  computerElements[computerSelect].classList.add("selected");
-  computerSelectedBeforeEl = computerElements[computerSelect];
-  return computerSelect;
+  const choiceIndex = Math.floor(Math.random() * 5);
+  const computerChoice = choiceList[choiceIndex];
+  computerChoiceEl.textContent = ` --- ${computerChoice}`;
+  updateSelectionStyle(computerElements, computerChoice);
+  return computerChoice.toLocaleLowerCase();
 }
 
 function playerSelects(e) {
-  playerChoiceEl.textContent = ` --- ${e.target.title}`;
-  playerSelectedBeforeEl.classList.remove("selected");
-  e.target.classList.add("selected");
-  playerSelectedBeforeEl = e.target;
-  const playerHand = e.target.title.toLocaleLowerCase();
+  stopConfetti();
+  removeConfetti();
+  const playerChoice = e.target.title;
+  playerChoiceEl.textContent = ` --- ${playerChoice}`;
+  updateSelectionStyle(playerElements, playerChoice);
+  const playerHand = playerChoice.toLocaleLowerCase();
   const computerHand = computerSelects();
   showResults(playerHand, computerHand);
+}
+
+function updateSelectionStyle(elements, choice) {
+  choiceList.forEach((hand) => {
+    elements[hand].classList.toggle("selected", hand === choice);
+  });
 }
 
 function updateScore(victory, defeat) {
   if (victory) {
     playerScoreEl.textContent = Number(playerScoreEl.textContent) + 1;
+    startConfetti();
   } else if (defeat) {
     computerScoreEl.textContent = Number(computerScoreEl.textContent) + 1;
   }
@@ -95,19 +100,18 @@ function resetAll() {
   computerSelectedBeforeEl.classList.remove("selected");
   playerScoreEl.textContent = 0;
   computerScoreEl.textContent = 0;
-  playerChoiceEl.replaceChildren();
-  computerChoiceEl.replaceChildren();
-  resultTextEl.replaceChildren();
-  verdictEl.replaceChildren();
+  playerChoiceEl.textContent = "";
+  computerChoiceEl.textContent = "";
+  resultTextEl.textContent = "";
+  verdictEl.textContent = "";
+  stopConfetti();
+  removeConfetti();
 }
 
-Object.keys(choices).forEach((element) => {
-  const hand = choices[element].name;
-  const playerHand = `player${hand}`;
-  const computerHand = `computer${hand}`;
-  playerElements[element] = document.getElementById(playerHand);
-  computerElements[element] = document.getElementById(computerHand);
-  playerElements[element].addEventListener("click", playerSelects);
+choiceList.forEach((hand) => {
+  playerElements[hand] = document.getElementById(`player${hand}`);
+  computerElements[hand] = document.getElementById(`computer${hand}`);
+  playerElements[hand].addEventListener("click", playerSelects);
 });
 
 resetIconEl.addEventListener("click", resetAll);
