@@ -51,8 +51,6 @@ function computerSelects() {
 }
 
 function playerSelects(e) {
-  stopConfetti();
-  removeConfetti();
   const playerChoice = e.target.title;
   playerChoiceEl.textContent = ` --- ${playerChoice}`;
   updateSelectionStyle(playerElements, playerChoice);
@@ -62,6 +60,10 @@ function playerSelects(e) {
 }
 
 function updateSelectionStyle(elements, choice) {
+  if (elements === playerElements) {
+    stopConfetti();
+    removeConfetti();
+  }
   choiceList.forEach((hand) => {
     elements[hand].classList.toggle("selected", hand === choice);
   });
@@ -104,8 +106,6 @@ function resetAll() {
   computerChoiceEl.textContent = "";
   resultTextEl.textContent = "";
   verdictEl.textContent = "";
-  stopConfetti();
-  removeConfetti();
 }
 
 choiceList.forEach((hand) => {
